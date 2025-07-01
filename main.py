@@ -31,6 +31,7 @@ coche_max_5 = pygame.transform.scale(coche_max_5, (65, 110 ))
 autos_enemigos = [
     pygame.transform.scale(pygame.image.load(os.path.join(IMAGENES_DIR, "RacerX.png")).convert_alpha(), (30, 60)),
     pygame.transform.scale(pygame.image.load(os.path.join(IMAGENES_DIR, "Spider11.png")).convert_alpha(), (30, 60)),
+    pygame.transform.scale(pygame.image.load(os.path.join(IMAGENES_DIR, "Mati21.png")).convert_alpha(), (30, 60)),
 ]
 
  

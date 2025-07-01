@@ -26,7 +26,15 @@ MUSICA_DIR = os.path.join(ASSETS_DIR, "assets", "music")
 coche_max_5 = pygame.image.load(os.path.join(IMAGENES_DIR, "Max5.png")).convert_alpha()
 coche_max_5 = pygame.transform.scale(coche_max_5, (65, 110 ))
 
-# Colores
+#imagen del coche enemigo
+
+autos_enemigos = [
+    pygame.transform.scale(pygame.image.load(os.path.join(IMAGENES_DIR, "RacerX.png")).convert_alpha(), (30, 60)),
+    pygame.transform.scale(pygame.image.load(os.path.join(IMAGENES_DIR, "Spider11.png")).convert_alpha(), (30, 60)),
+]
+
+ 
+ # Colores
 COLOR_01 = (0, 0, 0) #NEGRO
 COLOR_02 = (255, 255, 255) #BLANCO
 COLOR_03 = (255, 0, 0) #ROJO
@@ -56,8 +64,9 @@ def dibujar_proyectil(proyectil):
 
 
 # Competidores
-competidor_ancho = 50
-competidor_alto = 50
+competidor_ancho = 40
+competidor_alto = 20
+# VELOCIDAD_ENEMIGOS = 3
 competidores = []
 
 # Puntuación 
@@ -65,7 +74,7 @@ puntuacion = 0
 font = pygame.font.Font(None, 36)  
 
 # Tiempo entre disparos
-shoot_delay = 250
+shoot_delay = 190
 last_shot = 0
 
 # Reloj
@@ -97,19 +106,25 @@ while running:
         jugador.y += 5  
         
     # Rivales 
-    if len(competidores) < 5:  
-        nuevo_competidor = pygame.Rect(
-            random.randint(0, ANCHO_VENTANA - competidor_ancho),
-            random.randint(-100, -10),
-            competidor_ancho,
-            competidor_alto
-        )
-        competidores.append(nuevo_competidor)
-    
+    if len(competidores) < 5:    
+        nuevo_competidor = {     
+            "rect": pygame.Rect(
+                random.randint(0, ANCHO_VENTANA - 30),
+                -30,
+                30,
+                60
+            ),
+            "imagen": random.choice(autos_enemigos),
+            "velocidad": random.randint(2, 5)
+        }
+        competidores.append(nuevo_competidor)  
+
+
+
     # Mover competidores
     for competidor in competidores[:]:
-        competidor.y += random.randint(1, 8) #velocidad
-        if competidor.top > ALTO_VENTANA:
+        competidor["rect"].y += competidor["velocidad"]
+        if competidor["rect"].top > ALTO_VENTANA:
             competidores.remove(competidor)
             puntuacion += 1
             
@@ -122,12 +137,12 @@ while running:
     # Colisiones
     for competidor in competidores[:]:
         # Colisión con jugador
-        if jugador.colliderect(competidor):
+        if jugador.colliderect(competidor["rect"]):
             running = False
             
         # Colisión con proyectiles
         for proyectil in proyectiles[:]:
-            if competidor.colliderect(proyectil["rect"]):
+            if competidor["rect"].colliderect(proyectil["rect"]):
                 competidores.remove(competidor)
                 proyectiles.remove(proyectil)
                 puntuacion += 5  # Puntos por eliminar
@@ -138,7 +153,9 @@ while running:
     screen.blit(coche_max_5, jugador)
     pygame.draw.rect(screen, COLOR_DEBUG, jugador, 2)  
     for competidor in competidores:
-        pygame.draw.rect(screen, COLOR_03, competidor)
+        screen.blit(competidor["imagen"], competidor["rect"])
+        pygame.draw.rect(screen, (0, 255, 255), competidor["rect"], 1)
+
         
     for proyectil in proyectiles:
         dibujar_proyectil(proyectil)

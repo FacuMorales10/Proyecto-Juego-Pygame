@@ -22,5 +22,9 @@ autos_enemigos = [
     pygame.transform.scale(
         pygame.image.load(os.path.join(IMAGENES_DIR, "Spider11.png")),
         (30, 60)
+    ),
+    pygame.transform.scale(
+        pygame.image.load(os.path.join(IMAGENES_DIR, "Mati21.png")),
+        (30, 60)
     )
 ]

@@ -24,3 +24,4 @@ def dibujar(screen):
     """Dibuja al jugador en pantalla."""
     screen.blit(a.coche_max_5, jugador)
     pygame.draw.rect(screen, st.COLOR_DEBUG, jugador, 1)  # Opcional: contorno# player.py
+    # pygame.draw.rect(screen, st.COLOR_DEBUG, jugador, 2)#rectángulo de debug

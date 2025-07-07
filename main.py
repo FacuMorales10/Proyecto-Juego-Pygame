@@ -7,6 +7,7 @@ import assets as a
 import player
 import enemies
 import projectiles
+from screens.gameover import pantalla_game_over
 
 def main():
     # —— Inicialización de Pygame y ventana ——
@@ -16,28 +17,20 @@ def main():
     pygame.display.set_caption("Mach-Max")
     clock = pygame.time.Clock()
     font  = pygame.font.Font(None, 36)
-
-    # —— Variables de juego ——
-    puntuacion  = 0
-    shoot_delay = 190
-    last_shot   = 0
-
-    # < ---- A CHEQUEAR ---->
+    spawn_delay = 1000
+    last_spawn = pygame.time.get_ticks()
 
     # Sistema de Vidas ***
     vida_inicial = 3
     pausa_invulnerable = 2000
 
     # Puntuación y vida  *****
-    puntuacion = 0
     vidas = vida_inicial
     ultimo_toque = 0
-    invulnerable = False
-    font = pygame.font.Font(None, 36)   
+    invulnerable = False  
 
     # Puntuación 
-    puntuacion = 0
-    font = pygame.font.Font(None, 36)  
+    puntuacion = 0 
 
     # Tiempo entre disparos
     shoot_delay = 190
@@ -45,7 +38,6 @@ def main():
 
     # Reloj
     clock = pygame.time.Clock()
-
     
     # —— Bucle principal ——
     running = True
@@ -67,9 +59,11 @@ def main():
         # — Lógica —
         player.manejar_input()
 
-        # Enemigos
-        enemies.crear_competidor()
-        enemies.mover_competidores(puntuacion)
+        # Enemigos (spawn cada spawn_delay ms)
+        if current_time - last_spawn >= spawn_delay:
+            enemies.crear_competidor()
+            last_spawn = current_time
+        enemies.mover_competidores()
 
         # Proyectiles
         projectiles.mover()
@@ -116,53 +110,16 @@ def main():
         vida_text = font.render(f"Vidas: {vidas}", True, st.COLOR_02)  
         screen.blit(vida_text, (10, 30))
         
-        pygame.display.flip()
-        clock.tick(60)
-
-    # Pantalla "GAME OVER"
-    if vidas <= 0:
-        game_over = True
-        while game_over:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    game_over = False
-                    pygame.quit()
-                    exit()  # Asegura que el juego se cierre correctamente
-                if event.type == pygame.KEYDOWN:  
-                    if event.key == pygame.K_RETURN:  # Detecta ENTER
-                        game_over = False
-            
-            # Fondo semitransparente
-            s = pygame.Surface((st.ANCHO_VENTANA, st.ALTO_VENTANA))
-            s.set_alpha(128)
-            s.fill(st.COLOR_01) 
-            screen.blit(s, (0, 0))
-            
-            # Texto "GAME OVER"
-            game_over_font = pygame.font.Font(None, 74)
-            game_over_text = game_over_font.render("GAME OVER", True, st.COLOR_03)
-            game_over_rect = game_over_text.get_rect(center=(st.ANCHO_VENTANA/2, st.ALTO_VENTANA/3))
-            screen.blit(game_over_text, game_over_rect)
-            
-            # Estadísticas
-            stats_font = pygame.font.Font(None, 36)
-            puntuacion_final = stats_font.render(f"Puntuación Final: {puntuacion}", True, st.COLOR_03)  
-            screen.blit(puntuacion_final, (st.ANCHO_VENTANA/2 - puntuacion_final.get_width()/2, st.ALTO_VENTANA/2))
-            
-            # Texto "Presione ENTER para SALIR"
-            enter_text = stats_font.render("Presione ENTER para SALIR", True, st.COLOR_04)
-            enter_rect = enter_text.get_rect(center=(st.ANCHO_VENTANA/2, st.ALTO_VENTANA - 100))
-            screen.blit(enter_text, enter_rect)
-            
-            pygame.display.flip()  # Actualiza la pantalla dentro del bucle
-            clock.tick(60)
-
         # HUD
         texto = font.render(f"Puntuacion: {puntuacion}", True, st.COLOR_02)
         screen.blit(texto, (10, 10))
 
         pygame.display.flip()
         clock.tick(60)
+        
+        if vidas <= 0:
+            pantalla_game_over(screen, font, puntuacion)
+
     pygame.quit()
 
 if __name__ == "__main__":

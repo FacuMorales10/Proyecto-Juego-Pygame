@@ -10,7 +10,7 @@ MUSICA_DIR   = os.path.join(ASSETS_DIR, "assets", "music")
 
 coche_max_5 = pygame.transform.scale(
     pygame.image.load(os.path.join(IMAGENES_DIR, "Max5.png")),
-    (65, 110)
+    (50, 95)
 )
 
 

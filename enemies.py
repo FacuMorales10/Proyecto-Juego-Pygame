@@ -24,21 +24,14 @@ def crear_competidor():
             "velocidad": random.randint(2, 5)
         })
 
-def mover_competidores(puntuacion):
-    """
-    Recorre la lista, desplaza cada competidor según su velocidad
-    y lo elimina (sumando punto) si sale por abajo de la ventana.
-    """
-    for c in competidores[:]:
-        c["rect"].y += c["velocidad"]
-        if c["rect"].top > st.ALTO_VENTANA:
-            competidores.remove(c)
-            puntuacion += 1
+def mover_competidores():
+    """Mueve cada rival y lo elimina al salir de la ventana."""
+    for rival in competidores[:]:
+        rival["rect"].y += rival["velocidad"]
+        if rival["rect"].top > st.ALTO_VENTANA:
+            competidores.remove(rival)
 
 def dibujar_competidores(screen):
-    """
-    Dibuja en pantalla cada competidor con su imagen en su rect.
-    """
-    for c in competidores:
-        screen.blit(c["imagen"], c["rect"])
-    # pygame.draw.rect(screen, (0, 255, 255), competidor["rect"], 1)
+    """Dibuja todos los rivales en pantalla."""
+    for rival in competidores:
+        screen.blit(rival["imagen"], rival["rect"])

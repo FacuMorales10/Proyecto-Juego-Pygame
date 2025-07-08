@@ -28,3 +28,7 @@ autos_enemigos = [
         (30, 60)
     )
 ]
+
+# Imagen de fondo
+BACKGROUND_PATH = os.path.join(IMAGENES_DIR, "fondo.png")
+

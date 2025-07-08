@@ -7,7 +7,9 @@ import assets as a
 import player
 import enemies
 import projectiles
+import hud
 from screens.gameover import pantalla_game_over
+from assets import BACKGROUND_PATH
 
 def main():
     # —— Inicialización de Pygame y ventana ——
@@ -19,6 +21,12 @@ def main():
     font  = pygame.font.Font(None, 36)
     spawn_delay = 1000
     last_spawn = pygame.time.get_ticks()
+
+    background = pygame.transform.scale(
+    pygame.image.load(a.BACKGROUND_PATH).convert(),
+    (st.ANCHO_VENTANA, st.ALTO_VENTANA)
+)
+
 
     # Sistema de Vidas ***
     vida_inicial = 3
@@ -93,7 +101,7 @@ def main():
                 invulnerable = False
 
         # — Dibujado —
-        screen.fill(st.COLOR_01)
+        screen.blit(background, (0, 0))
 
         # Efecto de invulnerabilidad (parpadeo de jugador)
         if not invulnerable or (current_time // 100) % 2 == 0:  # Parpadeo cada 200ms
@@ -106,13 +114,8 @@ def main():
         puntuacion_text = font.render(f"Puntuacion: {puntuacion}", True, st.COLOR_02)  #parámetros normales
         screen.blit(puntuacion_text, (10, 10))
         
-        # Mostrar vidas restantes
-        vida_text = font.render(f"Vidas: {vidas}", True, st.COLOR_02)  
-        screen.blit(vida_text, (10, 30))
-        
-        # HUD
-        texto = font.render(f"Puntuacion: {puntuacion}", True, st.COLOR_02)
-        screen.blit(texto, (10, 10))
+        # HUD puntuacion y vidas
+        hud.dibujar_hud(screen, font, puntuacion, vidas)
 
         pygame.display.flip()
         clock.tick(60)

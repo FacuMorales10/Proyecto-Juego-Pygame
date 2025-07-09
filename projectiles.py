@@ -16,14 +16,12 @@ def crear(x, y, imagen):
     proyectiles.append({"rect": rect, "speed": 7, "img": imagen})
 
 def mover():
-    for p in proyectiles[:]:
-        p["rect"].y -= p["speed"]
-        if p["rect"].bottom < 0:
-            proyectiles.remove(p)
+    for proyectil in proyectiles[:]:
+        proyectil["rect"].y -= proyectil["speed"]
+        if proyectil["rect"].bottom < 0:
+            proyectiles.remove(proyectil)
 
 def dibujar(screen):
-    for p in proyectiles:
-        screen.blit(p["img"], p["rect"])
-
-
+    for proyectil in proyectiles:
+        screen.blit(proyectil["img"], proyectil["rect"])
         

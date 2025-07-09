@@ -1,9 +1,9 @@
 # Configurar la pantalla (ALTO/ANCHO)
-ANCHO_VENTANA = 800  
+ANCHO_VENTANA = 800 #500  
 ALTO_VENTANA = 600
 FPS = 60
 
- # Colores
+# Colores
 COLOR_01 = (0, 0, 0) #NEGRO
 COLOR_02 = (255, 255, 255) #BLANCO
 COLOR_03 = (255, 0, 0) #ROJO

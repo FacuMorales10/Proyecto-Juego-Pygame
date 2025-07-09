@@ -13,11 +13,7 @@ def crear_competidor():
     """
     if len(competidores) < 5:
         rect = pygame.Rect(
-            random.randint(0, st.ANCHO_VENTANA - 30),
-            -30,
-            30,
-            60
-        )
+            random.randint(0, st.ANCHO_VENTANA - 30),-30, 30, 60)
         competidores.append({
             "rect": rect,
             "imagen": random.choice(a.autos_enemigos),
@@ -25,11 +21,15 @@ def crear_competidor():
         })
 
 def mover_competidores():
+    puntuacion_adelantamiento = 0
     """Mueve cada rival y lo elimina al salir de la ventana."""
     for rival in competidores[:]:
         rival["rect"].y += rival["velocidad"]
         if rival["rect"].top > st.ALTO_VENTANA:
             competidores.remove(rival)
+            puntuacion_adelantamiento +=1
+    return puntuacion_adelantamiento
+            
 
 def dibujar_competidores(screen):
     """Dibuja todos los rivales en pantalla."""

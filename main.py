@@ -17,8 +17,7 @@ def main():
     pygame.mixer.init()
     screen = pygame.display.set_mode((st.ANCHO_VENTANA, st.ALTO_VENTANA))
     pygame.display.set_caption("Mach-Max")
-    clock = pygame.time.Clock()
-    font  = pygame.font.Font(None, 36)
+    font  = pygame.font.Font(None, 24)
     spawn_delay = 1000
     last_spawn = pygame.time.get_ticks()
 
@@ -31,12 +30,11 @@ def main():
     sierra_img = pygame.image.load(a.SIERRA_PATH).convert_alpha()
     sierra_img = pygame.transform.scale(sierra_img, (16, 16))
 
-
-    # Sistema de Vidas ***
+    # Sistema de Vidas
     vida_inicial = 3
     pausa_invulnerable = 2000
 
-    # Puntuación y vida  *****
+    # Puntuación y vida
     vidas = vida_inicial
     ultimo_toque = 0
     invulnerable = False  
@@ -47,7 +45,10 @@ def main():
     # Tiempo entre disparos
     shoot_delay = 190
     last_shot = 0
-
+    
+    #Tiempo de inicio
+    tiempo_inicial = pygame.time.get_ticks()
+    
     # Reloj
     clock = pygame.time.Clock()
     
@@ -65,7 +66,7 @@ def main():
                     current_time - last_shot > shoot_delay):
                     # Disparo
                     projectiles.crear(player.jugador.centerx,
-                                      player.jugador.top, sierra_img)
+                                    player.jugador.top, sierra_img)
                     last_shot = current_time
 
         # — Lógica —
@@ -75,34 +76,39 @@ def main():
         if current_time - last_spawn >= spawn_delay:
             enemies.crear_competidor()
             last_spawn = current_time
-        enemies.mover_competidores()
+        puntuacion += enemies.mover_competidores()
 
         # Proyectiles
         projectiles.mover()
 
         # Colisiones
-        for c in enemies.competidores[:]:
+        for competidor in enemies.competidores[:]:
             # Choque jugador–enemigo
-            if player.jugador.colliderect(c["rect"]) and not invulnerable:
+            if player.jugador.colliderect(competidor["rect"]) and not invulnerable:
                 vidas -= 1
                 ultimo_toque = current_time
                 invulnerable = True
-                enemies.competidores.remove(c)
+                enemies.competidores.remove(competidor)
                 if vidas <= 0:
                     running = False
 
             # Choque proyectil–enemigo
-            for p in projectiles.proyectiles[:]:
-                if c["rect"].colliderect(p["rect"]):
-                    enemies.competidores.remove(c)
-                    projectiles.proyectiles.remove(p)
+            for proyectil in projectiles.proyectiles[:]:
+                if competidor["rect"].colliderect(proyectil["rect"]):
+                    enemies.competidores.remove(competidor)
+                    projectiles.proyectiles.remove(proyectil)
                     puntuacion += 5
                     break
     
-        # Actualizando estado de invulneraBilidad
+        # Actualizando estado de invulnerabilidad
         if invulnerable:
             if current_time - ultimo_toque > pausa_invulnerable:
                 invulnerable = False
+                
+        #Tiempo de juego 
+        tiempo = (current_time - tiempo_inicial ) // 1000
+        min = tiempo // 60
+        seg = tiempo % 60
 
         # — Dibujado —
         screen.blit(background, (0, 0))
@@ -114,12 +120,8 @@ def main():
         enemies.dibujar_competidores(screen)
         projectiles.dibujar(screen)
         
-        # Mostrar puntuación 
-        puntuacion_text = font.render(f"Puntuacion: {puntuacion}", True, st.COLOR_02)  #parámetros normales
-        screen.blit(puntuacion_text, (10, 10))
-        
         # HUD puntuacion y vidas
-        hud.dibujar_hud(screen, font, puntuacion, vidas)
+        hud.dibujar_hud(screen, font, puntuacion, vidas, min, seg)
 
         pygame.display.flip()
         clock.tick(60)

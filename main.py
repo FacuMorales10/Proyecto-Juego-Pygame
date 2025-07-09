@@ -27,6 +27,10 @@ def main():
     (st.ANCHO_VENTANA, st.ALTO_VENTANA)
 )
 
+    # imagen del proyectil (sierra)
+    sierra_img = pygame.image.load(a.SIERRA_PATH).convert_alpha()
+    sierra_img = pygame.transform.scale(sierra_img, (16, 16))
+
 
     # Sistema de Vidas ***
     vida_inicial = 3
@@ -61,7 +65,7 @@ def main():
                     current_time - last_shot > shoot_delay):
                     # Disparo
                     projectiles.crear(player.jugador.centerx,
-                                      player.jugador.top)
+                                      player.jugador.top, sierra_img)
                     last_shot = current_time
 
         # — Lógica —

@@ -3,8 +3,17 @@ import pygame, settings as st
 
 proyectiles = []
 
-def crear(x, y):
-    proyectiles.append({"rect": pygame.Rect(x-2, y, 4, 10), "speed": 7})
+def crear(x, y, imagen):
+    """
+    Crea un proyectil con una imagen en la posición (x, y).
+    """
+    rect = pygame.Rect(
+        x - imagen.get_width() // 2,
+        y,
+        imagen.get_width(),
+        imagen.get_height()
+    )
+    proyectiles.append({"rect": rect, "speed": 7, "img": imagen})
 
 def mover():
     for p in proyectiles[:]:
@@ -14,4 +23,7 @@ def mover():
 
 def dibujar(screen):
     for p in proyectiles:
-        pygame.draw.rect(screen, st.COLOR_04, p["rect"])
+        screen.blit(p["img"], p["rect"])
+
+
+        

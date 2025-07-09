@@ -10,6 +10,10 @@ import projectiles
 import hud
 from screens.gameover import pantalla_game_over
 from assets import BACKGROUND_PATH
+from screens.pause import mostrar_pantalla_pausa
+from collisions import colision_jugador_enemigo, colision_proyectil_enemigo
+
+
 
 def main():
     # —— Inicialización de Pygame y ventana ——
@@ -86,33 +90,32 @@ def main():
         projectiles.mover()
 
         # Colisiones
-        for competidor in enemies.competidores[:]:
-            # Choque jugador–enemigo
-            if player.jugador.colliderect(competidor["rect"]) and not invulnerable:
-                vidas -= 1
-                ultimo_toque = current_time
-                invulnerable = True
-                enemies.competidores.remove(competidor)
-                if vidas <= 0:
-                    running = False
+        estado = {
+            "jugador": player.jugador,
+            "competidores": enemies.competidores,
+            "invulnerable": invulnerable,
+            "ultimo_toque": ultimo_toque,
+            "pausa_invulnerable": pausa_invulnerable,
+            "current_time": current_time,
+            "vidas": vidas
+        }
+        estado = colision_jugador_enemigo(estado)
 
-            # Choque proyectil–enemigo
-            for proyectil in projectiles.proyectiles[:]:
-                if competidor["rect"].colliderect(proyectil["rect"]):
-                    enemies.competidores.remove(competidor)
-                    projectiles.proyectiles.remove(proyectil)
-                    puntuacion += 5
-                    break
-                
+        vidas = estado["vidas"]
+        invulnerable = estado["invulnerable"]
+        ultimo_toque = estado["ultimo_toque"]
+
+        if vidas <= 0:
+            running = False
+
+        puntuacion += colision_proyectil_enemigo(
+            projectiles.proyectiles, enemies.competidores
+        )
+
         # En estado de PAUSA
         if pausa:
-            pausa_font = pygame.font.Font(None, 35)
-            pausa_text = pausa_font.render("PAUSA - Presiona (P) para continuar", True, st.COLOR_02)
-            text_rect = pausa_text.get_rect(center=(st.ANCHO_VENTANA/2, st.ALTO_VENTANA/2))
-            screen.blit(pausa_text, text_rect)
-            pygame.display.flip()
-            clock.tick(60)
-            continue
+            mostrar_pantalla_pausa(screen, st, clock)
+            pausa = False
     
         # Actualizando estado de invulnerabilidad
         if invulnerable:

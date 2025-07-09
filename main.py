@@ -76,7 +76,7 @@ def main():
         if current_time - last_spawn >= spawn_delay:
             enemies.crear_competidor()
             last_spawn = current_time
-        enemies.mover_competidores()
+        puntuacion += enemies.mover_competidores()
 
         # Proyectiles
         projectiles.mover()

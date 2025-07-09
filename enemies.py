@@ -21,11 +21,15 @@ def crear_competidor():
         })
 
 def mover_competidores():
+    puntuacion_adelantamiento = 0
     """Mueve cada rival y lo elimina al salir de la ventana."""
     for rival in competidores[:]:
         rival["rect"].y += rival["velocidad"]
         if rival["rect"].top > st.ALTO_VENTANA:
             competidores.remove(rival)
+            puntuacion_adelantamiento +=1
+    return puntuacion_adelantamiento
+            
 
 def dibujar_competidores(screen):
     """Dibuja todos los rivales en pantalla."""

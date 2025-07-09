@@ -30,7 +30,7 @@ def main():
     sierra_img = pygame.image.load(a.SIERRA_PATH).convert_alpha()
     sierra_img = pygame.transform.scale(sierra_img, (16, 16))
 
-    # Sistema de Vidas
+    ##Sistema de Vidas
     vida_inicial = 3
     pausa_invulnerable = 2000
 
@@ -42,7 +42,7 @@ def main():
     # Puntuación 
     puntuacion = 0 
 
-    # Tiempo entre disparos
+    ##Tiempo entre disparos
     shoot_delay = 190
     last_shot = 0
     
@@ -51,9 +51,11 @@ def main():
     
     # Reloj
     clock = pygame.time.Clock()
-    
-    # —— Bucle principal ——
+    # Variables de estado
+    pausa = False
     running = True
+    
+    # Bucle principal
     while running:
         current_time = pygame.time.get_ticks() #Tiempo actual en ms
 
@@ -62,8 +64,10 @@ def main():
             if event.type == pygame.QUIT:
                 running = False
             elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_p:  
+                    pausa = not pausa
                 if (event.key == pygame.K_SPACE and
-                    current_time - last_shot > shoot_delay):
+                    current_time - last_shot > shoot_delay and not pausa):
                     # Disparo
                     projectiles.crear(player.jugador.centerx,
                                     player.jugador.top, sierra_img)
@@ -99,6 +103,16 @@ def main():
                     projectiles.proyectiles.remove(proyectil)
                     puntuacion += 5
                     break
+                
+        # En estado de PAUSA
+        if pausa:
+            pausa_font = pygame.font.Font(None, 35)
+            pausa_text = pausa_font.render("PAUSA - Presiona (P) para continuar", True, st.COLOR_02)
+            text_rect = pausa_text.get_rect(center=(st.ANCHO_VENTANA/2, st.ALTO_VENTANA/2))
+            screen.blit(pausa_text, text_rect)
+            pygame.display.flip()
+            clock.tick(60)
+            continue
     
         # Actualizando estado de invulnerabilidad
         if invulnerable:

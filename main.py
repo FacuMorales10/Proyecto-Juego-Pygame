@@ -29,12 +29,15 @@ def main():
     pygame.image.load(a.BACKGROUND_PATH).convert(),
     (st.ANCHO_VENTANA, st.ALTO_VENTANA)
 )
+    enemies.competidores = []
+    projectiles.proyectiles = []
+
 
     # imagen del proyectil (sierra)
     sierra_img = pygame.image.load(a.SIERRA_PATH).convert_alpha()
     sierra_img = pygame.transform.scale(sierra_img, (16, 16))
 
-    ##Sistema de Vidas
+    #Sistema de Vidas
     vida_inicial = 3
     pausa_invulnerable = 2000
 
@@ -59,6 +62,12 @@ def main():
     pausa = False
     running = True
     
+    # Reiniciar posición del jugador
+    player.jugador = player.a.coche_max_5.get_rect(
+    centerx = st.ANCHO_VENTANA // 2,
+    bottom  = st.ALTO_VENTANA  - 10
+    )
+
     # Bucle principal
     while running:
         current_time = pygame.time.get_ticks() #Tiempo actual en ms
@@ -145,6 +154,7 @@ def main():
         
         if vidas <= 0:
             pantalla_game_over(screen, font, puntuacion)
+            return
 
     pygame.quit()
 

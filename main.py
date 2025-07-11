@@ -8,6 +8,7 @@ import player
 import enemies
 import projectiles
 import hud
+import music
 from screens.gameover import pantalla_game_over
 from assets import BACKGROUND_PATH
 from screens.pause import mostrar_pantalla_pausa
@@ -61,6 +62,10 @@ def main():
     # Variables de estado
     pausa = False
     running = True
+
+    # Música
+
+    music.play_music()
     
     # Reiniciar posición del jugador
     player.jugador = player.a.coche_max_5.get_rect(

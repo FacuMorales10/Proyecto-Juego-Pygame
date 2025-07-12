@@ -1,18 +1,28 @@
-def colision_jugador_enemigo(estado):
-    if not estado["invulnerable"]:
-        for competidor in estado["competidores"][:]:
-            if estado["jugador"].colliderect(competidor["rect"]):
-                estado["competidores"].remove(competidor)
-                estado["vidas"] -= 1
-                estado["invulnerable"] = True
-                estado["ultimo_toque"] = estado["current_time"]
+def colision_jugador_enemigo(jugador,
+                            competidores,
+                            invulnerable,
+                            ultimo_toque,
+                            pausa_invulnerable,
+                            current_time,
+                            vidas):
+    """
+    Maneja el choque jugador-enemigo, devuelve (vidas, invulnerable, ultimo_toque).
+    """
+    # Si no estoy en modo invulnerable, chequeo impacto
+    if not invulnerable:
+        for competidor in competidores[:]:
+            if jugador.colliderect(competidor["rect"]):
+                competidores.remove(competidor)
+                vidas -= 1
+                invulnerable = True
+                ultimo_toque = current_time
                 break
 
-    if estado["invulnerable"] and (estado["current_time"] - estado["ultimo_toque"]) > estado["pausa_invulnerable"]:
-        estado["invulnerable"] = False
+    # Chequeo fin de invulnerabilidad
+    if invulnerable and (current_time - ultimo_toque) > pausa_invulnerable:
+        invulnerable = False
 
-    return estado
-
+    return vidas, invulnerable, ultimo_toque
 
 
 def colision_proyectil_enemigo(proyectiles, competidores):
@@ -25,6 +35,7 @@ def colision_proyectil_enemigo(proyectiles, competidores):
             if competidor["rect"].colliderect(proyectil["rect"]):
                 competidores.remove(competidor)
                 proyectiles.remove(proyectil)
-                puntos += 5  # Puntos por eliminar
+                puntos += 5
                 break
     return puntos
+

@@ -1,22 +1,30 @@
 import pygame
 import settings as st
+from utils import guardar_puntaje
 
-def pantalla_game_over(screen, font, puntuacion):
+def pantalla_game_over(screen, fuente, puntuacion):
     """
-    Muestra la pantalla de GAME OVER y cierra el juego
-    cuando se presiona ENTER o ESC.
+    Muestra pantalla de GAME OVER, permite ingresar nombre
+    y guarda puntaje en archivo al presionar ENTER.
     """
     clock = pygame.time.Clock()
-    mostrando = True
+    nombre = ""
+    input_activo = True
+    max_caracteres = 10
 
-    while mostrando:
+    while input_activo:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 exit()
             elif event.type == pygame.KEYDOWN:
-                if event.key in (pygame.K_RETURN, pygame.K_ESCAPE):
-                    mostrando = False
+                if event.key == pygame.K_RETURN and nombre.strip():
+                    guardar_puntaje(nombre.strip(), puntuacion)
+                    input_activo = False
+                elif event.key == pygame.K_BACKSPACE:
+                    nombre = nombre[:-1]
+                elif len(nombre) < max_caracteres and event.unicode.isprintable():
+                    nombre += event.unicode
 
         # Fondo semitransparente
         overlay = pygame.Surface((st.ANCHO_VENTANA, st.ALTO_VENTANA))
@@ -24,23 +32,30 @@ def pantalla_game_over(screen, font, puntuacion):
         overlay.fill(st.COLOR_01)
         screen.blit(overlay, (0, 0))
 
-        # Texto principal
-        go_font = pygame.font.Font(None, 74)
-        go_surf = go_font.render("GAME OVER", True, st.COLOR_03)
-        go_rect = go_surf.get_rect(center=(st.ANCHO_VENTANA//2, st.ALTO_VENTANA//3))
-        screen.blit(go_surf, go_rect)
+        # Título "GAME OVER"
+        font_grande = pygame.font.Font("assets/fonts/arcade.ttf", 64)
+        texto_go = font_grande.render("GAME OVER", True, st.COLOR_03)
+        rect_go = texto_go.get_rect(center=(st.ANCHO_VENTANA // 2, st.ALTO_VENTANA // 3))
+        screen.blit(texto_go, rect_go)
 
-        # Puntuación
-        stats_font = pygame.font.Font(None, 36)
-        score_surf = stats_font.render(f"Puntuación Final: {puntuacion}", True, st.COLOR_02)
-        score_rect = score_surf.get_rect(center=(st.ANCHO_VENTANA//2, st.ALTO_VENTANA//2))
-        screen.blit(score_surf, score_rect)
+        # Puntuación final
+        stats_font = fuente
+        texto_score = stats_font.render(f"Puntuación Final: {puntuacion}", True, st.COLOR_02)
+        rect_score = texto_score.get_rect(center=(st.ANCHO_VENTANA // 2, st.ALTO_VENTANA // 2))
+        screen.blit(texto_score, rect_score)
 
         # Instrucciones
-        prompt_text = "Presiona ENTER para salir"
-        prompt_surf = stats_font.render(prompt_text, True, st.COLOR_04)
-        prompt_rect = prompt_surf.get_rect(center=(st.ANCHO_VENTANA//2, st.ALTO_VENTANA - 100))
-        screen.blit(prompt_surf, prompt_rect)
+        texto_ingreso = stats_font.render("Ingresá tu nombre y presioná ENTER", True, st.COLOR_04)
+        rect_ingreso = texto_ingreso.get_rect(center=(st.ANCHO_VENTANA // 2, st.ALTO_VENTANA - 140))
+        screen.blit(texto_ingreso, rect_ingreso)
+
+        # Caja de entrada de texto
+        caja_rect = pygame.Rect(st.ANCHO_VENTANA // 2 - 100, st.ALTO_VENTANA - 100, 200, 40)
+        pygame.draw.rect(screen, st.COLOR_02, caja_rect, 2)
+
+        texto_nombre = stats_font.render(nombre, True, st.COLOR_02)
+        rect_nombre = texto_nombre.get_rect(center=caja_rect.center)
+        screen.blit(texto_nombre, rect_nombre)
 
         pygame.display.flip()
         clock.tick(st.FPS)

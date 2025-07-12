@@ -1,25 +1,24 @@
-import pygame, settings as st
+import pygame
+import settings as st
+import assets as a
 
-proyectiles = []
+# Rect y sprite del jugador
+jugador = a.coche_max_5.get_rect(
+    centerx = st.ANCHO_VENTANA // 2,
+    bottom  = st.ALTO_VENTANA  - 10
+)
 
-def crear(x, y, imagen):
+def manejar_input():
     """
-    Crea un proyectil con una imagen en la posición (x, y).
+    Lee teclas y mueve el rectángulo jugador.
+    Llamar en cada iteración del loop.
     """
-    rect = pygame.Rect(
-        x - imagen.get_width() // 2,
-        y,
-        imagen.get_width(),
-        imagen.get_height()
-    )
-    proyectiles.append({"rect": rect, "speed": 7, "img": imagen})
-
-def mover():
-    for proyectil in proyectiles[:]:
-        proyectil["rect"].y -= proyectil["speed"]
-        if proyectil["rect"].bottom < 0:
-            proyectiles.remove(proyectil)
+    keys = pygame.key.get_pressed()
+    if keys[pygame.K_LEFT]  and jugador.left  > 0: jugador.x -= 5
+    if keys[pygame.K_RIGHT] and jugador.right < st.ANCHO_VENTANA: jugador.x += 5
+    if keys[pygame.K_UP]    and jugador.top   > 0: jugador.y -= 5
+    if keys[pygame.K_DOWN]  and jugador.bottom< st.ALTO_VENTANA: jugador.y += 5
 
 def dibujar(screen):
-    for proyectil in proyectiles:
-        screen.blit(proyectil["img"], proyectil["rect"])
+    """Dibuja al jugador en pantalla."""
+    screen.blit(a.coche_max_5, jugador)

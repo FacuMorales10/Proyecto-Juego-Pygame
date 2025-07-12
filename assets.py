@@ -30,6 +30,6 @@ autos_enemigos = [
 ]
 
 # Imagen de fondo
-BACKGROUND_PATH = os.path.join(IMAGENES_DIR, "fondo.png")
+BACKGROUND_PATH = os.path.join(IMAGENES_DIR, "Carretera.png")
 
 SIERRA_PATH = os.path.join(IMAGENES_DIR, "sierra.png")

@@ -1,7 +1,7 @@
 import pygame
 import random
 import os
-
+from music import play_music
 import settings as st
 import assets as a
 import player
@@ -16,6 +16,7 @@ def main():
     # —— Inicialización de Pygame y ventana ——
     pygame.init()
     pygame.mixer.init()
+    play_music()
     screen = pygame.display.set_mode((st.ANCHO_VENTANA, st.ALTO_VENTANA))
     pygame.display.set_caption("Mach-Max")
     font  = pygame.font.Font(None, 24)
@@ -73,18 +74,18 @@ def main():
 
         projectiles.mover()
 
-        # Colisiones
-        estado = {
-            "jugador": player.jugador,
-            "competidores": enemies.competidores,
-            "invulnerable": invulnerable,
-            "ultimo_toque": ultimo_toque,
-            "pausa_invulnerable": pausa_invulnerable,
-            "current_time": current_time,
-            "vidas": vidas
-        }
-        estado = colision_jugador_enemigo(estado)
+        # Colisiones jugador-enemigo
+        vidas, invulnerable, ultimo_toque = colision_jugador_enemigo(
+            player.jugador,
+            enemies.competidores,
+            invulnerable,
+            ultimo_toque,
+            pausa_invulnerable,
+            current_time,
+            vidas
+        )
 
+        # Colisiones proyectil-enemigo
         puntuacion += colision_proyectil_enemigo(
             projectiles.proyectiles,
             enemies.competidores

@@ -74,15 +74,16 @@ def main():
         projectiles.mover()
 
         # Colisiones
-        vidas, invulnerable, ultimo_toque = colision_jugador_enemigo(
-            player.jugador,
-            enemies.competidores,
-            invulnerable,
-            ultimo_toque,
-            pausa_invulnerable,
-            current_time,
-            vidas
-        )
+        estado = {
+            "jugador": player.jugador,
+            "competidores": enemies.competidores,
+            "invulnerable": invulnerable,
+            "ultimo_toque": ultimo_toque,
+            "pausa_invulnerable": pausa_invulnerable,
+            "current_time": current_time,
+            "vidas": vidas
+        }
+        estado = colision_jugador_enemigo(estado)
 
         puntuacion += colision_proyectil_enemigo(
             projectiles.proyectiles,

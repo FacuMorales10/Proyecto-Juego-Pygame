@@ -22,3 +22,4 @@ def manejar_input():
 def dibujar(screen):
     """Dibuja al jugador en pantalla."""
     screen.blit(a.coche_max_5, jugador)
+

@@ -8,6 +8,7 @@ import player
 import enemies
 import projectiles
 import hud
+from screens.pause import mostrar_pantalla_pausa
 from screens.gameover import pantalla_game_over
 from assets import BACKGROUND_PATH
 from collisions import colision_jugador_enemigo, colision_proyectil_enemigo
@@ -58,11 +59,12 @@ def main():
             if event.type == pygame.QUIT:
                 running = False
             elif event.type == pygame.KEYDOWN:
-                if (event.key == pygame.K_SPACE and
-                    current_time - last_shot > shoot_delay):
-                    projectiles.crear(player.jugador.centerx,
-                                      player.jugador.top, sierra_img)
+                if event.key == pygame.K_SPACE and current_time - last_shot > shoot_delay:
+                    projectiles.crear(player.jugador.centerx, player.jugador.top, sierra_img)
                     last_shot = current_time
+
+                elif event.key == pygame.K_LCTRL:
+                    mostrar_pantalla_pausa(screen, st, clock)
 
         # — Lógica —
         player.manejar_input()

@@ -2,30 +2,29 @@ import pygame
 
 def mostrar_pantalla_pausa(screen, st, clock):
     """
-    Muestra una pantalla de pausa
-    hasta que el jugador presione 'CTRL' para continuar.
+    Pausa hasta que el jugador presione 'CTRL' (una vez para pausar, otra para continuar).
     """
     font = pygame.font.Font(None, 48)
-    pausa = True
+    pausado = True
+    pygame.mixer.music.pause()  # Pausar música
 
-    while pausa:
+    while pausado:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 exit()
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_LCTRL:
-                    pausa = False
+                    pausado = False
+                    pygame.mixer.music.unpause()  # Reanudar música
 
-        # Fondo pausa
         overlay = pygame.Surface((st.ANCHO_VENTANA, st.ALTO_VENTANA))
         overlay.set_alpha(180)
         overlay.fill(st.COLOR_01)
         screen.blit(overlay, (0, 0))
 
-        # Texto de pausa
         texto = font.render("PAUSA", True, st.COLOR_03)
-        subtexto = font.render("Presiona 'CTRL' para continuar", True, st.COLOR_04)
+        subtexto = font.render("Presiona CTRL para continuar", True, st.COLOR_04)
 
         rect_texto = texto.get_rect(center=(st.ANCHO_VENTANA // 2, st.ALTO_VENTANA // 2 - 30))
         rect_sub = subtexto.get_rect(center=(st.ANCHO_VENTANA // 2, st.ALTO_VENTANA // 2 + 30))

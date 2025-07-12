@@ -1,4 +1,3 @@
-
 import pygame
 import settings as st
 
@@ -17,5 +16,3 @@ def dibujar_hud(screen, font, puntuacion, vidas, min, seg):
     # VIDAS
     vida_text = font.render(f"Vidas: {vidas}", True, st.COLOR_02)
     screen.blit(vida_text, (10, 50))
-    
-    

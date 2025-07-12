@@ -1,19 +1,37 @@
 import pygame
 
 def mostrar_pantalla_pausa(screen, st, clock):
-    pausa_font = pygame.font.Font(None, 35)
-    pausa_text = pausa_font.render("PAUSA - Presiona (P) para continuar", True, st.COLOR_02)
-    text_rect = pausa_text.get_rect(center=(st.ANCHO_VENTANA // 2, st.ALTO_VENTANA // 2))
+    """
+    Muestra una pantalla de pausa
+    hasta que el jugador presione 'CTRL' para continuar.
+    """
+    font = pygame.font.Font(None, 48)
+    pausa = True
 
-    en_pausa = True
-    while en_pausa:
+    while pausa:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 exit()
-            elif event.type == pygame.KEYDOWN and event.key == pygame.K_p:
-                en_pausa = False
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_LCTRL:
+                    pausa = False
 
-        screen.blit(pausa_text, text_rect)
+        # Fondo pausa
+        overlay = pygame.Surface((st.ANCHO_VENTANA, st.ALTO_VENTANA))
+        overlay.set_alpha(180)
+        overlay.fill(st.COLOR_01)
+        screen.blit(overlay, (0, 0))
+
+        # Texto de pausa
+        texto = font.render("PAUSA", True, st.COLOR_03)
+        subtexto = font.render("Presiona 'CTRL' para continuar", True, st.COLOR_04)
+
+        rect_texto = texto.get_rect(center=(st.ANCHO_VENTANA // 2, st.ALTO_VENTANA // 2 - 30))
+        rect_sub = subtexto.get_rect(center=(st.ANCHO_VENTANA // 2, st.ALTO_VENTANA // 2 + 30))
+
+        screen.blit(texto, rect_texto)
+        screen.blit(subtexto, rect_sub)
+
         pygame.display.flip()
-        clock.tick(10)
+        clock.tick(st.FPS)

@@ -1,4 +1,3 @@
-
 def colision_jugador_enemigo(estado):
     if not estado["invulnerable"]:
         for competidor in estado["competidores"][:]:
